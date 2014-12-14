@@ -9,9 +9,6 @@
 #include <assert.h>
 #include <longintrepr.h>
 
-#define WITH_BOOL   1
-#define MAX_LENGTH  65536
-
 static PyObject * fserial_dumps(PyObject *self, PyObject *args);
 static PyObject * fserial_loads(PyObject *self, PyObject *args);
 static PyObject * fserial_setbufsize(PyObject *self, PyObject *args);
@@ -69,7 +66,6 @@ static int w_object(char *result, PyObject *value)
         *result = TP_None;
         idx += 1;
     }
-#if WITH_BOOL == 1
     else if (value == Py_True) {
         *result = TP_True;
         idx += 1;
@@ -78,7 +74,6 @@ static int w_object(char *result, PyObject *value)
         *result = TP_False;
         idx += 1;
     }
-#endif
     else if (PyInt_CheckExact(value)) {
         *result = TP_Int64;
         *(int64_t *)(result + 1) = PyInt_AsLong(value);
@@ -220,7 +215,6 @@ static PyObject *r_object(char *s, int *idx)
             *idx = 1;
             Py_INCREF(Py_None);
             return Py_None;
-#if WITH_BOOL == 1
         case TP_True:
             *idx = 1;
             Py_INCREF(Py_True);
@@ -229,7 +223,6 @@ static PyObject *r_object(char *s, int *idx)
             *idx = 1;
             Py_INCREF(Py_False);
             return Py_False;
-#endif
         case TP_List:
             *idx = 1 + sizeof(val_size);
             val_size = *(int32_t *)(s + 1);
