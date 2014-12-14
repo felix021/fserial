@@ -12,30 +12,21 @@ libpath = glob.glob('build/lib.*/')
 sys.path.append(libpath[0])
 print sys.path
 import fserial
+fserial.setbufsize(65536)
 
 
 test_cases = [
-    {'a': None},
-    {'a': True},
-    {'a': False},
-
-    {'a': 1},
-    {'a': 9223372036854775807},
-    {'a': -9223372036854775808},
-
-    {'a': 9223372036854775807L},
-    {'a': -9223372036854775808L},
-
-    {'a': 9223372036854775808L},
-    {'a': -9223372036854775809L},
-
-    {'a': 1.0},
-    {'a': -1.0},
-
-    {'a': 'b'},
-
-    {'a': None, 'b': True, 'c': False, 'd': 1, 'e': 1.0, 'f': 'x'},
-
+    None, True, False,
+    1, -1, 9223372036854775807, -9223372036854775808,
+    1.0, -1.0, 11111.11111, -11111.11111,
+    9223372036854775807L, -9223372036854775808L, 9223372036854775808L, -9223372036854775809L,
+    "hello", "", "world!",
+    [1, 2, 3], [1,[2,[3],4],5],
+    (1, 2, 3), (1,(2,(3,),4),5),
+    (2, 3),
+    set([1,2,3]), set([1, "hello", 1.1]), set([1, "hello"]), set([1, (2, 3)]),
+    {'a': 1, 2: 'b'}, {'a': 1, 2: {'b': 3}},
+    {'a': [None, (True, {False: 4.0}, 1), "!"]},
     {
         'hello': None,
         'b': '12312312312',
@@ -48,17 +39,30 @@ test_cases = [
 ]
 
 for i, c in enumerate(test_cases):
+    print >>sys.stderr, '%dth case:' % i, type(c), str(c)
     try:
         x = fserial.dumps(c)
+        print >>sys.stderr, "  dumps:", [x]
     except Exception, e:
-        print >>sys.stderr, "%dth case err: exception[%s] <- %s" % (i, e.message, str(c))
+        print >>sys.stderr, "  dumps err: exception[%s]" % (e.message)
+        raise Exception('dumps failed')
         continue
         
-    y = fserial.loads(x)
-    if y != c:
-        print >>sys.stderr, '%dth case err: %s vs %s => [%s]' % (i, str(c), str(y), x)
+    try:
+        y = fserial.loads(x)
+        print >>sys.stderr, "  loads:", type(y), str(y)
+    except Exception, e:
+        print >>sys.stderr, "  loads err: exception[%s]" % (e.message)
+        raise Exception('loads failed')
+        continue
+
+    if c == y:
+        print >>sys.stderr, ' pass'
     else:
-        print >>sys.stderr, '%dth case pass: %s' % (i, str(c))
+        print >>sys.stderr, ' fail'
+        raise Exception('fail')
+
+#sys.exit(0)
 
 #performance test
 def time_run(foo):

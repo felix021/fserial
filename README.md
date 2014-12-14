@@ -1,23 +1,28 @@
 fserial
 =======
 
-simplest {,un}serializer for one-depth-dict with only str keys and str/int/float/None/True/False values
+simple {,un}serializer for several python builtin objects (None/True/False/int/long/float/str/list/tuple/dict/set)
 
-in such cases, this extension runs much faster than builtin python serializers like marshal and cPickle.
+this extension runs much faster than builtin python serializers like marshal and cPickle.
+
+Notice
+=======
+
+This extension uses a fix-length buffer in dumps, which has a default length of 64KB. Call fserial.setbufsize to set a larger lenghth, in case the result may exceed the default value.
 
 Performance test:
 =======
 
 you can try test.py yourself.
 
-time consumed for 5,000,000 round of dumps/loads:
+Time consumed for 5,000,000 rounds of dumps/loads:
 
-    fserial.dumps: time used: 1.434218
-    marshal.dumps: time used: 5.686624
-    cPickle.dumps: time used: 5.663999
+    fserial.dumps: 1.581582
+    marshal.dumps: 5.548474
+    cPickle.dumps: 5.602932
     simplejson.loads: #approximate 10x slower than cPickle/marshal
 
-    fserial.loads: time used: 3.218033
-    marshal.loads: time used: 6.762694
-    cPickle.loads: time used: 16.427137
-    simplejson.loads: time used: 23.069645
+    fserial.loads: 3.616863
+    marshal.loads: 6.749527
+    cPickle.loads: 15.953505
+    simplejson.loads: 23.159412
