@@ -8,7 +8,7 @@ this extension runs much faster than builtin python serializers like marshal and
 Notice
 =======
 
-This extension uses a fix-length buffer in dumps, which has a default length of 64KB. Call fserial.setbufsize to set a larger lenghth, in case the result may exceed the default value.
+This extension uses a fix-length buffer in dumps, which has a default length of 64KB. Call fserial.setbufsize to set a larger length, in case the result may exceed the default value.
 
 Performance test:
 =======

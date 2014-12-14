@@ -14,7 +14,7 @@ setup(
     version         = '0.0.1',
     author          = 'felix021',
     author_email    = 'felix021@gmail.com',
-    description     = 'simplest {,un}serializer for one-depth-dict with only str keys and str/int/float/None/True/False values',
+    description     = 'simple and faster {,un}serializer for most python builtin data objects',
     license         = "Public Domain",
     keywords        = "python extension simple serializer and unserializer",
     url             = "http://github.com/felix021/fserial",
