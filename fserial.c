@@ -283,6 +283,8 @@ static PyObject *r_object(char *s, int *idx)
                 subvalue = r_object(s + *idx, &subidx);
                 *idx += subidx;
                 PyDict_SetItem(result, key, subvalue);
+                Py_DECREF(key);
+                Py_DECREF(subvalue);
             }
             return result;
         default:
